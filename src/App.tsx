@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Logo from './assets/hey-banco-logo-white.svg';
-
 import General from './General';
 import Atencion_cliente from './Atencion_cliente';
 
