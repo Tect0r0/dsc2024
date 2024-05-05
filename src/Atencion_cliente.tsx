@@ -8,13 +8,14 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS2.register(LineElement, CategoryScale, LinearScale, Title, PointElement);
 
 export default function Atencion_cliente() {
-  const [questions, setQuestions] = useState([]);
- 
+  
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [totalDudas, setTotalDudas] = useState<number>(0);
   const [totalQuejas, setTotalQuejas] = useState<number>(0);
-
-  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
+  
+  const [questions, setQuestions] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<number>(0);
+  const [answer, setAnswer] = useState('');
 
 
   useEffect(() => {
@@ -32,6 +33,30 @@ export default function Atencion_cliente() {
       });
   }, []);
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAnswer(event.target.value);
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('handleSubmit called')
+    event.preventDefault();
+
+    const question = questions[selectedQuestion];
+
+    axios.post('http://localhost:5000/answer', {
+      question: question,
+      answer: answer
+    })
+    .then(response => {
+      console.log(response.data);
+      setAnswer('');
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+    });
+    setTimeout(() => {window.location.reload();}, 2000);
+  }
+
   //Data for the doughnut chart
   const data = {
     labels: ['Dudas', 'Quejas'],
@@ -44,8 +69,6 @@ export default function Atencion_cliente() {
     ]
   };
 
-  
-
   const options = {
     responsive: true,
     maintainAspectRatio: false
@@ -56,9 +79,14 @@ export default function Atencion_cliente() {
       <div className='page1'>
         <div className="graphs_cont">
           <div id='tiempo' className="graphs1">
- 
-                 </div>
-          <div id='nums' className="graphs1-2">
+            <iframe title="Datathon_HeyBanco_Quejas" width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiZDQxZTg5NmYtNzRlMy00NTA2LWEwZWYtZGQ0YmU3MTk1ZDg1IiwidCI6ImM2NWEzZWE2LTBmN2MtNDAwYi04OTM0LTVhNmRjMTcwNTY0NSIsImMiOjR9" allowFullScreen></iframe>
+          </div>
+          <div id='tiempo' className="graphs1">
+          <iframe title="Datathon_HeyBanco_Dudas" width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiMTE1YWFkMmQtZDYyZS00YzkzLTg2YmYtNTY2Mzk2M2FhMWQwIiwidCI6ImM2NWEzZWE2LTBmN2MtNDAwYi04OTM0LTVhNmRjMTcwNTY0NSIsImMiOjR9" allowFullScreen></iframe>
+          </div>
+        </div>
+        <div className="graphs_cont">
+        <div id='nums' className="graphs1-2">
             <div className='Numeros'>
               <div className="graphs2">
                 <h2 className='info'>{totalDudas} <br /> DUDAS</h2>
@@ -72,14 +100,6 @@ export default function Atencion_cliente() {
               <Doughnut data={data} options={options} />
 
             </div>
-          </div>
-          
-        </div>
-
-
-        <div className="graphs_cont">
-          <div className="graphs1">
-            faq
           </div>
           <div className="graphs1">
           <table>
@@ -112,8 +132,15 @@ export default function Atencion_cliente() {
             </div>
           ))}
         </div>
-        <form className='answer'>
-            <input type="text" id="answer" name="answer" placeholder="" autoComplete='off'></input>
+        <form className='answer' onSubmit={handleSubmit}>
+            <input 
+              type="text" 
+              id="answer" 
+              name="answer" 
+              placeholder=""
+              autoComplete='off'
+              value={answer}
+              onChange={handleInputChange}/>
             <button className='submit_butt' type="submit">Enviar</button>
         </form>
       </div>
