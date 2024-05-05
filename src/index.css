@@ -82,14 +82,15 @@ header{
   min-width: 200px;
 }
 
-.iframexd{
-  width: 100%;
+.graphs{
+  width: 73%;
   height: 100%;
-
 }
 
 .page_cont{
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .top_header{

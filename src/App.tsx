@@ -31,7 +31,7 @@ export default function App() {
               style={{textDecoration: page === "Atencion_cliente" ? "underline" : ""}}
               onClick={() => setPage("Atencion_cliente")}
             >
-              Atención a cliente
+              Atención al cliente
             </button>
           </div>
         </div>
