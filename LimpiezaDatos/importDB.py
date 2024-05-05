@@ -1,4 +1,5 @@
 import mysql.connector
+import pyodbc
 import re
 import csv
 
@@ -15,28 +16,42 @@ def replace_emojis(text):
 
 try:
     # Establecer la conexión con la base de datos MySQL
-    conexion = mysql.connector.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='BalooMowgli48.',
-        database='datathon'
-    )
+    # conexion = mysql.connector.connect(
+    #     host='localhost',
+    #     port=3306,
+    #     user='root',
+    #     password='BalooMowgli48.',
+    #     database='datathon'
+    # )
 
-    if conexion.is_connected():
-        print("La conexión a la base de datos fue exitosa.")
+    # Establecer la conexión con la base de datos Microsoft SQL Server
+    conexion = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=TATO-LAPTOP\SQLEXPRESS;DATABASE=datathon;UID=sa;PWD=123456')
 
     cursor = conexion.cursor()
 
-    # Crear la tabla Tweets si no existe
+    # Crear la tabla Tweets si no existe MySQL
+    # cursor.execute("""
+    # CREATE TABLE IF NOT EXISTS Tweets (
+    #     id_tweet INT PRIMARY KEY,
+    #     date DATE,
+    #     time TIME,
+    #     tweet TEXT,
+    #     Class VARCHAR(50)
+    # );
+    # """)
+
+    # Crear la tabla Tweets si no existe Microsoft SQL Server
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Tweets (
-        id_tweet INT PRIMARY KEY,
-        date DATE,
-        time TIME,
-        tweet TEXT,
-        Class VARCHAR(50)
-    );
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='dbo.Tweets' AND xtype='U')
+        BEGIN
+            CREATE TABLE Tweets (
+                id_tweet INT PRIMARY KEY,
+                date DATE,
+                time TIME,
+                tweet VARCHAR(MAX),
+                Class VARCHAR(50)
+            );
+        END
     """)
 
     # Leer el archivo CSV con los datos de los tweets
@@ -50,8 +65,11 @@ try:
             # Limpiar los emojis y otros caracteres especiales del tweet
             tweet = replace_emojis(tweet)
 
-            # Insertar el tweet en la base de datos
-            cursor.execute("INSERT INTO Tweets (id_tweet, date, time, tweet, Class) VALUES (%s, %s, %s, %s, %s)", (id_tweet, date, time, tweet, Class))
+            # Insertar el tweet en la base de datos MySQL
+            # cursor.execute("INSERT INTO Tweets (id_tweet, date, time, tweet, Class) VALUES (%s, %s, %s, %s, %s)", (id_tweet, date, time, tweet, Class))
+
+            # Insertar el tweet en la base de datos Microsoft SQL Server
+            cursor.execute("INSERT INTO Tweets (id_tweet, date, time, tweet, Class) VALUES (?, ?, ?, ?, ?)", (id_tweet, date, time, tweet, Class))
 
     conexion.commit()
 
@@ -59,7 +77,7 @@ except mysql.connector.Error as err:
     print(f"Algo salió mal: {err}")
 
 finally:
-    if conexion.is_connected():
+    if conexion is not None:
         cursor.close()
         conexion.close()
         print("La conexión a la base de datos se ha cerrado.")

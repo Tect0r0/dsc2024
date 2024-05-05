@@ -47,9 +47,9 @@ export default function Atencion_cliente() {
         </div>
         <div className="questions">
           {questions.map((question, index) => (
-                <div className={index === selectedQuestion ? 'expanded' : 'collapsed'} key={index} onClick={() => setSelectedQuestion(index)}>
-                {question}
-                </div>
+            <div className={`mensaje ${index === selectedQuestion ? 'expanded' : 'collapsed'}`} key={index} onClick={() => setSelectedQuestion(index)}>
+              {question}
+            </div>
           ))}
         </div>
         <form className='answer'>
