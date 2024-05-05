@@ -21,10 +21,10 @@ def get_questions():
     }
 
     # Connect to MySQL Server
-    conn = mysql.connector.connect(**config)
+    # conn = mysql.connector.connect(**config)
 
     # Connect to Microsoft SQL Server
-    #conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=TATO-LAPTOP\SQLEXPRESS;DATABASE=datathon;UID=sa;PWD=123456')
+    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=TATO-LAPTOP\SQLEXPRESS;DATABASE=datathon;UID=sa;PWD=123456')
 
     cursor = conn.cursor()
 

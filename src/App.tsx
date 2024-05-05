@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import Logo from './assets/hey-banco-logo-white.svg';
 import General from './General';
 import Atencion_cliente from './Atencion_cliente';
+import Chatbot from './Chatbot';
 
-type PageName = 'Inicio' | 'Atencion_cliente'; // Define the names of the pages
+type PageName = 'Inicio' | 'Atencion_cliente' | 'Chatbot'; // Define the names of the pages
 
 export default function App() {
   const [page, setPage] = useState<PageName | "">( () => {
@@ -15,6 +16,7 @@ export default function App() {
   const pages: Record<PageName, JSX.Element> = { // Create an object with the pages
     "Inicio": <General />,
     "Atencion_cliente": <Atencion_cliente />,
+    "Chatbot": <Chatbot />
   }
 
   useEffect(() => {
@@ -41,6 +43,13 @@ export default function App() {
               onClick={() => setPage("Atencion_cliente")}
             >
               Atención al cliente
+            </button>
+            <button 
+              id='chatbot'
+              style={{textDecoration: page === "Chatbot" ? "underline" : ""}}
+              onClick={() => setPage("Chatbot")}
+            >
+              Chatbot
             </button>
           </div>
         </div>
