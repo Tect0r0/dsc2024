@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios'; // or use fetch API
 
 export default function Atencion_cliente() {
   const [questions, setQuestions] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
 
   useEffect(() => {
     axios.get('http://localhost:5000/questions')
@@ -46,14 +47,15 @@ export default function Atencion_cliente() {
         </div>
         <div className="questions">
           {questions.map((question, index) => (
-            <div key={index}>
+            <div className={`mensaje ${index === selectedQuestion ? 'expanded' : 'collapsed'}`} key={index} onClick={() => setSelectedQuestion(index)}>
               {question}
             </div>
           ))}
-            <button onClick={() => console.log('click')}>
-            log
-            </button>
         </div>
+        <form className='answer'>
+            <input type="text" id="answer" name="answer" placeholder="" autoComplete='off'></input>
+            <button className='submit_butt' type="submit">Enviar</button>
+        </form>
       </div>
     </div>
   );
