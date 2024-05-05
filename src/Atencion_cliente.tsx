@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios'; // or use fetch API
 import { Chart as ChartJS, ArcElement,Tooltip,Legend } from 'chart.js';
 import {Chart as ChartJS2, LineElement, CategoryScale, LinearScale, Title, PointElement} from 'chart.js';
@@ -10,11 +10,14 @@ ChartJS2.register(LineElement, CategoryScale, LinearScale, Title, PointElement);
 
 export default function Atencion_cliente() {
   const [questions, setQuestions] = useState([]);
+
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [totalDudas, setTotalDudas] = useState<number>(0);
   const [totalQuejas, setTotalQuejas] = useState<number>(0);
   const [dudasByDay, setDudasByDay] = useState([]);
   const [quejasByDay, setQuejasByDay] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
+
 
   useEffect(() => {
     axios.get('http://localhost:5000/questions')
@@ -22,6 +25,7 @@ export default function Atencion_cliente() {
         setTotalDudas(response.data.total_dudas);
         setTotalQuejas(response.data.total_quejas);
         setTrendingTopics(response.data.trending_topics);
+        setSelectedQuestion(response.data.questions);
    
 
       })
@@ -105,14 +109,15 @@ export default function Atencion_cliente() {
         </div>
         <div className="questions">
           {questions.map((question, index) => (
-            <div key={index}>
+            <div className={`mensaje ${index === selectedQuestion ? 'expanded' : 'collapsed'}`} key={index} onClick={() => setSelectedQuestion(index)}>
               {question}
             </div>
           ))}
-            <button onClick={() => console.log('click')}>
-            log
-            </button>
         </div>
+        <form className='answer'>
+            <input type="text" id="answer" name="answer" placeholder="" autoComplete='off'></input>
+            <button className='submit_butt' type="submit">Enviar</button>
+        </form>
       </div>
     </div>
   );
