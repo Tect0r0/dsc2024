@@ -3,7 +3,6 @@ import axios from 'axios'; // or use fetch API
 import { Chart as ChartJS, ArcElement,Tooltip,Legend } from 'chart.js';
 import {Chart as ChartJS2, LineElement, CategoryScale, LinearScale, Title, PointElement} from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import {Line} from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS2.register(LineElement, CategoryScale, LinearScale, Title, PointElement);
@@ -14,8 +13,6 @@ export default function Atencion_cliente() {
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [totalDudas, setTotalDudas] = useState<number>(0);
   const [totalQuejas, setTotalQuejas] = useState<number>(0);
-  const [dudasByDay, setDudasByDay] = useState([]);
-  const [quejasByDay, setQuejasByDay] = useState([]);
 
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
 
