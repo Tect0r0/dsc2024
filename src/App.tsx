@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Logo from './assets/hey-banco-logo-white.svg';
 import General from './General';
 import Atencion_cliente from './Atencion_cliente';
@@ -6,12 +6,21 @@ import Atencion_cliente from './Atencion_cliente';
 type PageName = 'Inicio' | 'Atencion_cliente'; // Define the names of the pages
 
 export default function App() {
-  const [page, setPage] = useState<PageName | "">("Inicio")
+  const [page, setPage] = useState<PageName | "">( () => {
+  
+  const savedPage = localStorage.getItem('page');
+    return savedPage as PageName || "Inicio";
+  })
 
   const pages: Record<PageName, JSX.Element> = { // Create an object with the pages
     "Inicio": <General />,
     "Atencion_cliente": <Atencion_cliente />,
   }
+
+  useEffect(() => {
+    // Save the current page to localStorage whenever it changes
+    localStorage.setItem('page', page);
+  }, [page]);
 
   return (
     <>
