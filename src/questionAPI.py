@@ -1,5 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from datetime import datetime
 import mysql.connector
 import pyodbc
 
@@ -7,8 +8,6 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/questions', methods=['GET'])
-
-
 def get_questions():
     # Replace with your actual MySQL Server config
     config = {
@@ -30,11 +29,11 @@ def get_questions():
 
 
     # Get total Dudas
-    cursor.execute("SELECT COUNT(*) FROM tweets_interaccion WHERE Class = 'Duda'")
+    cursor.execute("SELECT COUNT(*) FROM tweets_interaccion WHERE Class = 'Duda' AND fue_respondido = 0")
     total_dudas = cursor.fetchone()[0]
 
     # Get total Quejas
-    cursor.execute("SELECT COUNT(*) FROM tweets_interaccion WHERE Class = 'Queja'")
+    cursor.execute("SELECT COUNT(*) FROM tweets_interaccion WHERE Class = 'Queja' AND fue_respondido = 0")
     total_quejas = cursor.fetchone()[0]
 
     
@@ -61,8 +60,7 @@ def get_questions():
 
     trending_topics.append({'topic': 'General', 'count': total_general})
 
-    cursor.execute('SELECT mensaje FROM tweets_interaccion')
-    #cursor.execute('SELECT mensaje FROM dbo.Tweets_Interaccion')
+    cursor.execute('SELECT mensaje FROM tweets_interaccion WHERE fue_respondido = 0')
     questions = [row[0] for row in cursor.fetchall()]
 
 
@@ -76,6 +74,33 @@ def get_questions():
 
     return jsonify(result)
 
+@app.route('/answer', methods=['POST'])
+def answer_question():
+    # Get the question and answer from the request data
+    data = request.get_json()
+    question = data['question']
+    answer = data['answer']
+
+    now = datetime.now()
+
+    fecha_respuesta = now.strftime("%Y-%m-%d")
+    hora_respuesta = now.strftime("%H:%M:%S")
+
+    # Connect to the database MySQL
+    # conn = mysql.connector.connect(**config)
+
+    # Connect to the database MSSQL
+    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=TATO-LAPTOP\SQLEXPRESS;DATABASE=datathon;UID=sa;PWD=123456')
+    cursor = conn.cursor()
+
+    # Update the database
+    cursor.execute(f"UPDATE tweets_interaccion SET respuesta = '{answer}', fue_respondido = 1, fecha_respuesta = '{fecha_respuesta}', hora_respuesta = '{hora_respuesta}' WHERE mensaje = '{question}'")
+
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+
+    return jsonify({'status': 'success'})
 
 
 
