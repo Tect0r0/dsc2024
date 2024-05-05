@@ -10,12 +10,13 @@ ChartJS2.register(LineElement, CategoryScale, LinearScale, Title, PointElement);
 
 export default function Atencion_cliente() {
   const [questions, setQuestions] = useState([]);
-
+ 
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [totalDudas, setTotalDudas] = useState<number>(0);
   const [totalQuejas, setTotalQuejas] = useState<number>(0);
   const [dudasByDay, setDudasByDay] = useState([]);
   const [quejasByDay, setQuejasByDay] = useState([]);
+
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
 
 
@@ -25,7 +26,7 @@ export default function Atencion_cliente() {
         setTotalDudas(response.data.total_dudas);
         setTotalQuejas(response.data.total_quejas);
         setTrendingTopics(response.data.trending_topics);
-        setSelectedQuestion(response.data.questions);
+        setQuestions(response.data.questions);
    
 
       })

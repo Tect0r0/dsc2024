@@ -383,7 +383,7 @@ th:nth-child(1), td:nth-child(1) {
 
 th:nth-child(2), td:nth-child(2) {
   width: 30%;
-
+}
 form.answer{
   width: 80%;
   height: 8%;
@@ -427,9 +427,4 @@ form.answer{
 @keyframes glide {
   0% { background-position: 0 0; }
   100% { background-position: 200px 200px; }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
