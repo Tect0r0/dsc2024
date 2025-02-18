@@ -9,7 +9,12 @@ ChartJS2.register(LineElement, CategoryScale, LinearScale, Title, PointElement);
 
 export default function Atencion_cliente() {
   
-  const [trendingTopics, setTrendingTopics] = useState([]);
+  interface TrendingTopic {
+    topic: string;
+    count: number;
+  }
+
+  const [trendingTopics, setTrendingTopics] = useState<TrendingTopic[]>([]);
   const [totalDudas, setTotalDudas] = useState<number>(0);
   const [totalQuejas, setTotalQuejas] = useState<number>(0);
   
